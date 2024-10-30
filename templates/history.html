@@ -65,9 +65,11 @@
             <th scope="col">Match Timestamp</th>
             <th scope="col">Player 1</th>
             <th scope="col">Player 2</th>
+            <th scope="col">Is Tie</th>
             <th scope="col">Winner</th>
             <th scope="col">Loser</th>
-            <th scope="col">Is Tie</th>
+            <th scope="col">Player 1 Moves</th>
+            <th scope="col">Player 2 Moves</th>
             <th scope="col">Total Moves</th>
             <th scope="col">Moves Sequence</th>
           </tr>
@@ -75,13 +77,15 @@
         <tbody id="historyTableBody">
           {% for record in history %}
           <tr>
-            <td><button class="btn btn-primary" data-id="{{ record._id }}" onclick="handleButtonClick(this)">Action</button></td>
+            <td><button class="btn btn-primary" data-id="{{ record._id }}" data-player1-moves="{{ record.player_1_moves }}" data-player2-moves="{{ record.player_2_moves }}" onclick="handleButtonClick(this)">Action</button></td>
             <td>{{ record.match_timestamp }}</td>
             <td>{{ record.player_1 }}</td>
             <td>{{ record.player_2 }}</td>
+            <td>{{ record.is_tie }}</td>
             <td>{{ record.winner }}</td>
             <td>{{ record.loser }}</td>
-            <td>{{ record.is_tie }}</td>
+            <td>{{ record.player_1_moves }}</td>
+            <td>{{ record.player_2_moves }}</td>
             <td>{{ record.total_moves }}</td>
             <td>
               {% for i in range(9) %}
@@ -94,27 +98,59 @@
       </table>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="previewModalLabel">Game Board Preview</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div id="gameBoard" class="d-flex flex-wrap" style="width: 180px; height: 180px;">
+              <!-- Game board cells will be inserted here -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- include Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         function handleButtonClick(button) {
-          const recordId = button.getAttribute('data-id');
-          fetch('/handle_action', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: recordId }),
-          })
-          .then(response => response.json())
-          .then(data => {
-            console.log('Success:', data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+          const player1_moves = button.getAttribute('data-player1-moves');
+          const player2_moves = button.getAttribute('data-player2-moves');
+          const gameBoard = document.getElementById('gameBoard');
+          gameBoard.innerHTML = '';
+
+            for (let i = 0; i < 9; i++) {
+            const cell = document.createElement('div');
+            cell.style.width = '60px';
+            cell.style.height = '60px';
+            cell.style.border = '1px solid black';
+            cell.style.display = 'flex';
+            cell.style.alignItems = 'center';
+            cell.style.justifyContent = 'center';
+            cell.textContent=player1_moves[i];
+            if (player1_moves.includes(i.toString())) {
+              cell.textContent = 'O';
+            } else if (player2_moves.includes(i.toString())) {
+              cell.textContent = 'X';
+            } else {
+              cell.textContent = '';
+            }
+            gameBoard.appendChild(cell);
+            }
+
+          $('#previewModal').modal('show');
         }
 
         document.getElementById('playerSearch').addEventListener('input', filterTable);
