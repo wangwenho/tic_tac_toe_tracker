@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game History</title>
+    
+    <!-- 引入Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Bootstrap Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Tic Tac Toe</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/welcome">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/history">History</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#/statistics">Statistics</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    
+    <!-- Main Content -->
+    <div class="container">
+      <h1 class="text-center my-4">Game History</h1>
+      
+      <!-- Search Filters -->
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <input type="text" id="playerSearch" class="form-control" placeholder="Search by Player">
+        </div>
+        <div class="col-md-4">
+          <input type="text" id="winnerSearch" class="form-control" placeholder="Search by Winner">
+        </div>
+        <div class="col-md-4">
+          <input type="date" id="dateSearch" class="form-control" placeholder="Search by Date">
+        </div>
+      </div>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Action</th>
+            <th scope="col">Match Timestamp</th>
+            <th scope="col">Player 1</th>
+            <th scope="col">Player 2</th>
+            <th scope="col">Winner</th>
+            <th scope="col">Loser</th>
+            <th scope="col">Is Tie</th>
+            <th scope="col">Total Moves</th>
+            <th scope="col">Moves Sequence</th>
+          </tr>
+        </thead>
+        <tbody id="historyTableBody">
+          {% for record in history %}
+          <tr>
+            <td><button class="btn btn-primary" data-id="{{ record._id }}" onclick="handleButtonClick(this)">Action</button></td>
+            <td>{{ record.match_timestamp }}</td>
+            <td>{{ record.player_1 }}</td>
+            <td>{{ record.player_2 }}</td>
+            <td>{{ record.winner }}</td>
+            <td>{{ record.loser }}</td>
+            <td>{{ record.is_tie }}</td>
+            <td>{{ record.total_moves }}</td>
+            <td>
+              {% for i in range(9) %}
+              {{ record['move_' + (i+1)|string] }}{% if not loop.last %}, {% endif %}
+              {% endfor %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- include Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function handleButtonClick(button) {
+          const recordId = button.getAttribute('data-id');
+          fetch('/handle_action', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: recordId }),
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Success:', data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+        }
+
+        document.getElementById('playerSearch').addEventListener('input', filterTable);
+        document.getElementById('winnerSearch').addEventListener('input', filterTable);
+        document.getElementById('dateSearch').addEventListener('input', filterTable);
+
+        function filterTable() {
+          const playerSearch = document.getElementById('playerSearch').value.toLowerCase();
+          const winnerSearch = document.getElementById('winnerSearch').value.toLowerCase();
+          const dateSearch = document.getElementById('dateSearch').value;
+
+          const rows = document.querySelectorAll('#historyTableBody tr');
+          rows.forEach(row => {
+            const player1 = row.children[2].textContent.toLowerCase();
+            const player2 = row.children[3].textContent.toLowerCase();
+            const winner = row.children[4].textContent.toLowerCase();
+            const matchTimestamp = row.children[1].textContent;
+
+            const playerMatch = player1.includes(playerSearch) || player2.includes(playerSearch);
+            const winnerMatch = winner.includes(winnerSearch);
+            const dateMatch = dateSearch ? matchTimestamp.startsWith(dateSearch) : true;
+
+            if (playerMatch && winnerMatch && dateMatch) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        }
+      </script>
+</body>
+</html>
