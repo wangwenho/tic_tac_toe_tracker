@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic Tac Toe</title>
     
-    <!-- 引入Bootstrap CSS -->
+    <!-- include Bootstrap CSS -->
     <link
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
@@ -31,22 +31,9 @@
         font-size: 24px;
       }
     </style>
-    <script>
-      document.addEventListener('DOMContentLoaded', (event) => {
-        document.addEventListener('keydown', (event) => {
-          const key = event.key;
-          if (key >= '1' && key <= '9') {
-            const index = parseInt(key) - 1;
-            const button = document.getElementById('cell-' + index);
-            if (button) {
-              button.click();
-            }
-          }
-        });
-      });
-    </script>
   </head>
   <body>
+
     <!-- Bootstrap Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">Tic Tac Toe</a>
@@ -82,23 +69,31 @@
     <!-- Main Content -->
     <div class="container">
       <h1 class="text-center my-4">Tic Tac Toe</h1>
-      <div class="d-flex justify-content-center">
-        <div class="grid">
-          {% for i in range(9) %}
-          <div class="cell">
-        <form method="post">
-          <input type="hidden" name="index" value="{{ i }}" />
-          <button type="submit" class="btn btn-light btn-block" id="cell-{{ i }}">{{ board[i] }}</button>
-        </form>
-          </div>
-          {% endfor %}
+      <form method="post" class="mb-4">
+        <div class="form-group">
+          <label for="player_1">Player 1 Name:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="player_1"
+            name="player_1"
+            required
+          />
         </div>
-      </div>
-      </div>
+        <div class="form-group">
+          <label for="player_2">Player 2 Name:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="player_2"
+            name="player_2"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Start Game</button>
+      </form>
     </div>
-    <p class="text-center">Player 1: {{ player_1 }}, Player 2: {{ player_2 }}</p>
-    <p class="text-center">Game state: {{ state }}</p>
-    
+
     <!-- include Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

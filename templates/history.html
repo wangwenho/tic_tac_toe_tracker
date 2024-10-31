@@ -10,6 +10,16 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <style>
+      .table-responsive {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 700px;
+      }
+      .nowrap {
+        white-space: nowrap;
+      }
+    </style>
   </head>
   <body>
     <!-- Bootstrap Navbar -->
@@ -29,13 +39,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item active">
-              <a class="nav-link" href="/welcome">Play Gmae<span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/welcome">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/username">Play Game</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/history">History</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/players_statistics">Statistics</a>
+              <a class="nav-link" href="/stats">Stats</a>
             </li>
           </ul>
         </div>
@@ -58,45 +71,48 @@
         </div>
       </div>
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Action</th>
-            <th scope="col">Match Timestamp</th>
-            <th scope="col">Player 1</th>
-            <th scope="col">Player 2</th>
-            <th scope="col">Is Tie</th>
-            <th scope="col">Winner</th>
-            <th scope="col">Loser</th>
-            <th scope="col">Player 1 Moves</th>
-            <th scope="col">Player 2 Moves</th>
-            <th scope="col">Total Moves</th>
-            <th scope="col">Moves Sequence</th>
-          </tr>
-        </thead>
-        <tbody id="historyTableBody">
-          {% for record in history %}
-          <tr>
-            <td><button class="btn btn-primary" data-id="{{ record._id }}" data-player1-moves="{{ record.player_1_moves }}" data-player2-moves="{{ record.player_2_moves }}" onclick="handleButtonClick(this)">Preview</button></td>
-            <td>{{ record.match_timestamp }}</td>
-            <td>{{ record.player_1 }}</td>
-            <td>{{ record.player_2 }}</td>
-            <td>{{ record.is_tie }}</td>
-            <td>{{ record.winner }}</td>
-            <td>{{ record.loser }}</td>
-            <td>{{ record.player_1_moves }}</td>
-            <td>{{ record.player_2_moves }}</td>
-            <td>{{ record.total_moves }}</td>
-            <td>
-              {{record.move_sequence}}
-              {% for i in range(9) %}
-              {{ record['move_' + (i+1)|string] }}{% if not loop.last %}, {% endif %}
-              {% endfor %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <!-- Game History Table -->
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" class="nowrap">Action</th>
+              <th scope="col" class="nowrap">Match Timestamp</th>
+              <th scope="col" class="nowrap">Player 1</th>
+              <th scope="col" class="nowrap">Player 2</th>
+              <th scope="col" class="nowrap">Is Tie</th>
+              <th scope="col" class="nowrap">Winner</th>
+              <th scope="col" class="nowrap">Loser</th>
+              <th scope="col" class="nowrap">Player 1 Moves</th>
+              <th scope="col" class="nowrap">Player 2 Moves</th>
+              <th scope="col" class="nowrap">Total Moves</th>
+              <th scope="col" class="nowrap">Moves Sequence</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            {% for record in history %}
+            <tr>
+              <td class="nowrap"><button class="btn btn-primary" data-id="{{ record._id }}" data-player1-moves="{{ record.player_1_moves }}" data-player2-moves="{{ record.player_2_moves }}" onclick="handleButtonClick(this)">Preview</button></td>
+              <td class="nowrap">{{ record.match_timestamp }}</td>
+              <td class="nowrap">{{ record.player_1 }}</td>
+              <td class="nowrap">{{ record.player_2 }}</td>
+              <td class="nowrap">{{ record.is_tie }}</td>
+              <td class="nowrap">{{ record.winner }}</td>
+              <td class="nowrap">{{ record.loser }}</td>
+              <td class="nowrap">{{ record.player_1_moves }}</td>
+              <td class="nowrap">{{ record.player_2_moves }}</td>
+              <td class="nowrap">{{ record.total_moves }}</td>
+              <td class="nowrap">
+                {{record.move_sequence}}
+                {% for i in range(9) %}
+                {{ record['move_' + (i+1)|string] }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Modal -->
@@ -132,7 +148,7 @@
           const gameBoard = document.getElementById('gameBoard');
           gameBoard.innerHTML = '';
 
-            for (let i = 0; i < 9; i++) {
+            for (let i = 1; i < 10; i++) {
             const cell = document.createElement('div');
             cell.style.width = '60px';
             cell.style.height = '60px';
@@ -140,7 +156,6 @@
             cell.style.display = 'flex';
             cell.style.alignItems = 'center';
             cell.style.justifyContent = 'center';
-            cell.textContent=player1_moves[i];
             if (player1_moves.includes(i.toString())) {
               cell.textContent = 'O';
             } else if (player2_moves.includes(i.toString())) {

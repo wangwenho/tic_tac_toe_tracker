@@ -3,37 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tic Tac Toe</title>
+    <title>Welcome to Tic Tac Toe</title>
     
-    <!-- include Bootstrap CSS -->
+    <!-- 引入Bootstrap CSS -->
     <link
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <style>
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(3, 100px);
-        grid-template-rows: repeat(3, 100px);
-        gap: 5px;
-        margin: 20px auto;
-      }
-      .cell {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid #000;
-        font-size: 24px;
-      }
-      .cell button {
-        width: 100%;
-        height: 100%;
-        font-size: 24px;
-      }
-    </style>
   </head>
   <body>
-
     <!-- Bootstrap Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">Tic Tac Toe</a>
@@ -51,47 +29,31 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="/welcome">Play Gmae<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/welcome">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/username">Play Game</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/history">History</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/players_statistics">Statistics</a>
+            <a class="nav-link" href="/stats">Stats</a>
           </li>
         </ul>
       </div>
     </nav>
 
     <!-- Main Content -->
-    <div class="container">
-      <h1 class="text-center my-4">Tic Tac Toe</h1>
-      <form method="post" class="mb-4">
-        <div class="form-group">
-          <label for="player_1">Player 1 Name:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="player_1"
-            name="player_1"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="player_2">Player 2 Name:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="player_2"
-            name="player_2"
-            required
-          />
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Start Game</button>
+    <div class="container text-center mt-5">
+      <h1>Welcome to Tic Tac Toe</h1>
+      <p class="lead">Click the button below to start a new game.</p>
+      <form method="post" action="/welcome">
+        <button type="submit" class="btn btn-primary btn-lg">Start</button>
       </form>
     </div>
 
-    <!-- include Bootstrap JS and dependencies -->
+    <!-- 引入Bootstrap JS和依賴 -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
