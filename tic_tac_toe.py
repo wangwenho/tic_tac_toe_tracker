@@ -6,7 +6,7 @@ import datetime
 
 app = Flask(__name__)
 client = MongoClient(host="localhost", port=27017)
-db = client.tic_tac_toe
+db = client.tic_tac_toe_tracker
 
 # innitialize the game board and the players
 
